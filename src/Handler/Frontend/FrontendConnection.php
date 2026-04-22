@@ -13,6 +13,9 @@ use SMProxy\MysqlPool\MySQLException;
  */
 class FrontendConnection
 {
+    /**
+     * @var FrontendQueryHandler $queryHandler
+     */
     protected $queryHandler;
 
     public function __construct()

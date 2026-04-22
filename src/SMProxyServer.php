@@ -33,6 +33,9 @@ use Swoole\Coroutine;
  */
 class SMProxyServer extends BaseServer
 {
+    /**
+     * @var FrontendAuthenticator[] $source
+     */
     public $source;
     public $mysqlClient;
     private $mysqlServer;
@@ -443,6 +446,7 @@ class SMProxyServer extends BaseServer
     private function auth(BinaryPacket $bin, \swoole_server $server, int $fd)
     {
         if ($bin->data[0] == 20) {
+            // 这是一个特殊的认证响应包，可能用于MySQL 8.0+的caching_sha2_password认证插件或其他扩展认证
             $checkAccount = $this->checkAccount($server, $fd, $this->source[$fd]->user, array_copy($bin->data, 4, 20));
             if (!$checkAccount) {
                 $this->accessDenied($server, $fd, 4);
@@ -453,6 +457,8 @@ class SMProxyServer extends BaseServer
                 $this->source[$fd]->auth = true;
             }
         } elseif ($bin->data[4] == 14) {
+            // 14对应MySQL协议中的COM_PING命令
+
             if ($server->exist($fd)) {
                 $server->send($fd, getString(OkPacket::$OK));
             }

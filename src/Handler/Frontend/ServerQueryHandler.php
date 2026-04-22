@@ -13,6 +13,7 @@ class ServerQueryHandler implements FrontendQueryHandler
 {
     public function query(string $sql)
     {
+        var_dump($sql);
         $rs = ServerParse::parse($sql);
 
         return $rs & 0xff;

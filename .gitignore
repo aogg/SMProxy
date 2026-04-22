@@ -11,3 +11,5 @@
 
 # Composer lock file
 /composer.lock
+/composer.phar
+.history
